@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px 15px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 18px #0001;
+        }
+        h1 { text-align: center; color: #334155; }
+        form.add { display: flex; gap: 8px; }
+        input[name="title"] {
+            flex: 1; min-width: 0; padding: 12px;
+            border: 1px solid #cbd5e1; border-radius: 8px;
+        }
+        button {
+            padding: 10px 13px; border: 0;
+            border-radius: 8px; cursor: pointer;
+        }
+        .add button { background: #2563eb; color: white; }
+        ul { padding: 0; list-style: none; }
+        li {
+            display: flex; align-items: center;
+            gap: 8px; padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .task { flex: 1; overflow-wrap: anywhere; }
+        .done { text-decoration: line-through; color: #94a3b8; }
+        .delete { background: #fee2e2; color: #b91c1c; }
+        .empty { text-align: center; color: #64748b; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>My To-Do List 📝</h1>
+
+    <form class="add" method="POST">
+        <input name="title" placeholder="Enter a task..." required>
+        <button type="submit">Add</button>
+    </form>
+
+    <ul>
+        {% for task in tasks %}
+        <li>
+            <form method="POST" action="{{ url_for('toggle', task_id=loop.index0) }}">
+                <button type="submit">{{ "✅" if task.done else "⬜" }}</button>
+            </form>
+
+            <span class="task {{ 'done' if task.done else '' }}">
+                {{ task.title }}
+            </span>
+
+            <form method="POST" action="{{ url_for('delete', task_id=loop.index0) }}">
+                <button class="delete" type="submit">Delete</button>
+            </form>
+        </li>
+        {% else %}
+        <p class="empty">No tasks yet. Add your first task!</p>
+        {% endfor %}
+    </ul>
+</div>
+</body>
+</html>
